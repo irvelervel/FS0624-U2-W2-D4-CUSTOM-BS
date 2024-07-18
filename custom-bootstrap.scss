@@ -1,0 +1,58 @@
+// lo scopo di questo progetto è importare i sorgenti di bootstrap, applicare
+// le modifiche necessarie per la loro personalizzazione e infine ottenere
+// tramite il processo di compilazione una versione personalizzata di BS
+
+// modifichiamo i COLORI DI BASE di bootstrap
+// per modificare i colori di BS dobbiamo accedere al partial chiamato "variables"
+// ma, come abbiamo visto nel file originale "bootstrap.scss", _variables.scss
+// necessita prima dell'import di _functions.scss per il suo corretto funzionamento
+
+@import 'scss/functions';
+@import 'scss/variables';
+
+// creiamo dei colori nuovi per sovrascrivere i vecchi
+$new-primary: rgb(255, 81, 32);
+$new-success: rgb(133, 255, 133);
+$new-warning: rgb(211, 211, 67);
+$diana: purple;
+
+// creiamo ora la NOSTRA mappa colori, con l'intendo di sovrascrivere
+// quella originale di BS
+
+$new-theme-colors: (
+  'primary': $new-primary,
+  'success': $new-success,
+  'warning': $new-warning,
+  'diana': $diana,
+);
+
+// personalizziamo i breakpoints
+$new-grid-breakpoints: (
+  xxxl: 1600px,
+);
+
+$grid-breakpoints: map-merge($grid-breakpoints, $new-grid-breakpoints);
+
+// personalizziamo le spaziature
+
+$new-spacers: (
+  6: $spacer * 4,
+);
+
+$spacers: map-merge($spacers, $new-spacers);
+
+// ora vado a "fondere" le due palette definite dalle mappe,
+// mettendo $new-theme-colors SOPRA a $theme-colors (l'originale)
+
+$theme-colors: map-merge($theme-colors, $new-theme-colors);
+// $theme-colors è ora la fusione della mappa originale con la mia personalizzata
+
+@import 'scss/bootstrap.scss';
+// con questo import finale, io mi riporto nel mio custom TUTTO quello che
+// mancava dell'originale
+// come mai re-importando tutto alla fine non sovrascriviamo nuovamente
+// le mappe, le variabili e tutto quello che abbiamo cercato di personalizzare?
+// perchè in bootstrap TUTTE le variabili (colori, mappe etc.) sono state
+// definite con il flag !default -> questo comporta che se ad es. una variabile
+// $primary oppure $theme-colors sia già stata definita precedentemente,
+// l'import finale di bootstrap non la vada a sovrascrivere!
